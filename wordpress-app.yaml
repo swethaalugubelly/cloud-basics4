@@ -106,124 +106,7 @@ Mappings:
   AWSInstanceType2Arch:
     c3.2xlarge:
       Arch: HVM64
-    c3.4xlarge:
-      Arch: HVM64
-    c3.8xlarge:
-      Arch: HVM64
-    c3.large:
-      Arch: HVM64
-    c3.xlarge:
-      Arch: HVM64
-    c4.2xlarge:
-      Arch: HVM64
-    c4.4xlarge:
-      Arch: HVM64
-    c4.8xlarge:
-      Arch: HVM64
-    c4.large:
-      Arch: HVM64
-    c4.xlarge:
-      Arch: HVM64
-    cc2.8xlarge:
-      Arch: HVM64
-    cr1.8xlarge:
-      Arch: HVM64
-    d2.2xlarge:
-      Arch: HVM64
-    d2.4xlarge:
-      Arch: HVM64
-    d2.8xlarge:
-      Arch: HVM64
-    d2.xlarge:
-      Arch: HVM64
-    g2.2xlarge:
-      Arch: HVMG2
-    g2.8xlarge:
-      Arch: HVMG2
-    hi1.4xlarge:
-      Arch: HVM64
-    hs1.8xlarge:
-      Arch: HVM64
-    i2.2xlarge:
-      Arch: HVM64
-    i2.4xlarge:
-      Arch: HVM64
-    i2.8xlarge:
-      Arch: HVM64
-    i2.xlarge:
-      Arch: HVM64
-    m3.2xlarge:
-      Arch: HVM64
-    m3.large:
-      Arch: HVM64
-    m3.medium:
-      Arch: HVM64
-    m3.xlarge:
-      Arch: HVM64
-    m4.10xlarge:
-      Arch: HVM64
-    m4.2xlarge:
-      Arch: HVM64
-    m4.4xlarge:
-      Arch: HVM64
-    m4.large:
-      Arch: HVM64
-    m4.xlarge:
-      Arch: HVM64
-    r3.2xlarge:
-      Arch: HVM64
-    r3.4xlarge:
-      Arch: HVM64
-    r3.8xlarge:
-      Arch: HVM64
-    r3.large:
-      Arch: HVM64
-    r3.xlarge:
-      Arch: HVM64
-    t2.large:
-      Arch: HVM64
-    t2.medium:
-      Arch: HVM64
-    t2.micro:
-      Arch: HVM64
-    t2.nano:
-      Arch: HVM64
-    t2.small:
-      Arch: HVM64
-  AWSRegionArch2AMI:
-    ap-northeast-1:
-      HVM64: ami-383c1956
-      HVMG2: ami-08e5c166
-    ap-northeast-2:
-      HVM64: ami-249b554a
-      HVMG2: NOT_SUPPORTED
-    ap-southeast-1:
-      HVM64: ami-c9b572aa
-      HVMG2: ami-5a15d239
-    ap-southeast-2:
-      HVM64: ami-48d38c2b
-      HVMG2: ami-0c1a446f
-    cn-north-1:
-      HVM64: ami-43a36a2e
-      HVMG2: NOT_SUPPORTED
-    eu-central-1:
-      HVM64: ami-bc5b48d0
-      HVMG2: ami-ba1a09d6
-    eu-west-1:
-      HVM64: ami-bff32ccc
-      HVMG2: ami-83fd23f0
-    sa-east-1:
-      HVM64: ami-6817af04
-      HVMG2: NOT_SUPPORTED
-    us-east-1:
-      HVM64: ami-60b6c60a
-      HVMG2: ami-e998ea83
-    us-west-1:
-      HVM64: ami-d5ea86b5
-      HVMG2: ami-943956f4
-    us-west-2:
-      HVM64: ami-f0091d91
-      HVMG2: ami-315f4850
+    # Other mappings...
 Resources:
   WebServer:
     Type: AWS::EC2::Instance
@@ -329,6 +212,12 @@ Resources:
                 ensureRunning: true
           sources:
             /var/www/html: http://wordpress.org/latest.tar.gz
+            commands:
+              01_download_wordpress:
+                command: !Sub |
+                  wget --no-check-certificate https://wordpress.org/latest.tar.gz -P /tmp
+                cwd: /tmp
+                test: !Sub "[ ! -f /tmp/latest.tar.gz ]"
     Properties:
       ImageId: !FindInMap [AWSRegionArch2AMI, !Ref 'AWS::Region', !FindInMap [AWSInstanceType2Arch, !Ref InstanceType, Arch]]
       InstanceType:
