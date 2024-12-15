@@ -328,7 +328,7 @@ Resources:
                 enabled: true
                 ensureRunning: true
           sources:
-            /var/www/html: http://wordpress.org/latest.tar.gz
+            /var/www/html: https://wordpress.org/latest.tar.gz
             commands:
               01_download_wordpress:
                 command: !Sub |
